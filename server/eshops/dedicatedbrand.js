@@ -68,17 +68,17 @@ axios.get(url)
       const title= $(el).find('.productList-title').text().trim();
       const price = $(el).find('.productList-price').text().trim().replace("EUR", "€");
 
-      news.push({ brand, title, price, releaseDateStr });
+      news.push({ brand, title, price});
     });
 
     // Log the news array to the console to verify it
     console.log(news);
 
     // Convert the list to JSON format
-    const newsJSON = JSON.stringify(news);
+    //const newsJSON = JSON.stringify(news);
 
     // Write the JSON to a file
-    fs.writeFileSync('dedicatedbrand.json', newsJSON);
+    //fs.writeFileSync('dedicatedbrand.json', newsJSON);
   })
   .catch(console.error);
 

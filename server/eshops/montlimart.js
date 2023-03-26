@@ -19,9 +19,9 @@ axios.get (url)
         });
         console.log(productNamesAndPrices);
         // Convert the list to JSON format
-        const productNamesAndPricesJSON = JSON.stringify(productNamesAndPrices);
+        //const productNamesAndPricesJSON = JSON.stringify(productNamesAndPrices);
 
         // Write the JSON to a file
-        fs.writeFileSync('montlimart.json', productNamesAndPricesJSON);
+        //fs.writeFileSync('montlimart.json', productNamesAndPricesJSON);
 })
 .catch (console.error);

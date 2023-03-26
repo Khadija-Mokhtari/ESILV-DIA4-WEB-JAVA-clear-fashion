@@ -35,7 +35,6 @@ const checkboxReasonablePrice = document.querySelector('#reasonable-checkbox');
 // To sort our products whether they are cheaper, more expensive, recent or not
 
 const selectSort = document.querySelector('#sort-select');
-//const sortPrice = document.querySelector('#sort-select');
 
 // Display our "span"
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -75,23 +74,6 @@ const fetchProducts = async (page = 1, size = 12, brand) => { // Ajouter la marq
     if (brand) {
       url += `&brand=${brand}`;
     }
-
-    //if (recent) {
-    //  const twoWeeksAgo = new Date(Date.now() - 12096e5).toISOString(); // 2 weeks = 12096e5 ms
-    //  url += `&created_at_after=${twoWeeksAgo}`;
-    //}
-
-    //if (maxPrice) {
-    //    url += `&price_lte=${maxPrice}`;
-    //}
-
-    //if (sort) {
-    //  if (sort === 'price_asc') {
-    //    url += '&_sort=price&_order=asc';
-    //  } else if (sort === 'price_desc') {
-    //    url += '&_sort=price&_order=desc';
-    //  }
-    //}
     
     const response = await fetch(url);
     const body = await response.json();
@@ -108,27 +90,13 @@ const fetchProducts = async (page = 1, size = 12, brand) => { // Ajouter la marq
   }
 };
 
-/**
- * A voir si on garde pour le sort by price
- */
-//const sortProducts = (products, sortOption) => {
-//  return products.sort((a, b) => {
-//    if (sortOption === 'price-asc') {
-//      return a.price - b.price;
-//    } 
-//    else {
-//      return b.price - a.price;
-//    }
-//  });
-//};
+
 
 /**
  * Render list of products
  * @param  {Array} products
  */
 const renderProducts = products => {
-
-  //const sortedProducts = sortProducts(products, document.querySelector('#sort-select').value);
 
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
@@ -195,19 +163,6 @@ const render = (products, pagination) => {
  * Filters
  */
 
-// Recent products
-//const RecentProduct = (product) => {
-//  const releasedDate = new Date(product.released);
-//  const recent = new Date();
-//  recent.setDate(recent.getDate() - 14);
-//  return (releasedDate >= recent);
-//};
-
-//const filterByRecent = (products) => {
-//  return products.filter(RecentProduct);
-//};
-
-
 const filterByRecent = (products, twoWeeks = 14) => {
   const recent = new Date();
   recent.setDate(recent.getDate() - twoWeeks);
@@ -239,41 +194,6 @@ const applyFilters = products => {
  * Sort functions
  */
 
-//function sortByPrice(products, ascending = true) {
-//  if (ascending) {
-//    return products.sort((a, b) => a.price - b.price);
-//  } 
-//  else {
-//    return products.sort((a, b) => b.price - a.price);
-//  }
-//};
-
-//const sortByDate = (products, ascending = true) => {
-//  if (ascending) {
-//    return products.sort((a, b) => new Date(a.released) - new Date(b.released));
-//  }
-//  else {
-//    return products.sort((a, b) => new Date(b.released) - new Date(a.released));
-//  }
-//};
-
-//const applySort = products => {
-//  const sortValue = selectSort.value;
-
-//  switch (sortValue) {
-//    case 'price-asc':
-//      return sortByPrice(products);
-//    case 'price-desc':
-//      return sortByPrice(products, false);
-//    case 'date-asc':
-//      return sortByDate(products);
-//    case 'date-desc':
-//      return sortByDate(products, false);
-//    default:
-//      return products;
-//  }
-//};
-
 const applySort = (products) => {
   const sortFunctions = {
     'price-asc': (arr) => arr.sort((a, b) => a.price - b.price),
@@ -290,53 +210,6 @@ const applySort = (products) => {
 /** 
  * Indicators
  */
-//const getRecentProducts = (products, days = 14) => {
-  //const today = new Date();
-//  const recentThreshold = new Date(today.setDate(today.getDate() - new Date()));
-//  return products.filter((product) => new Date(product.released) > recentThreshold);
-//};
-
-//const Percentiles = (products, percentiles) => {
-//  const prices = products.map((product) => product.price).sort((a, b) => a - b);
-//  const result = {};
-
-//  percentiles.forEach((percentile) => {
-//    const index = Math.round((prices.length - 1) * (percentile / 100));
-//    result[percentile] = prices[index];
-//  });
-
-//  return result;
-//};
-
-//const findLastReleasedDate = (products) => {
-//  const dates = products.map((product) => new Date(product.released));
-//  return new Date(Math.max.apply(null, dates));
-//};
-
-//const calculateIndicators = (products) => {
-//  return {
-    //brandsCount,
-//    newProductsCount,
-//    p50,
-//    p90,
-//    p95,
-//    lastReleasedDate,
-//  };
-//};
-
-//const main = async () => {
-//  const { result, meta } = await fetchProducts();
-
-//  setCurrentProducts({ result, meta });
-
-//  const filteredProducts = applyFilters(currentProducts);
-//  const sortedProducts = applySort(filteredProducts);
-//  const indicators = calculateIndicators(sortedProducts);
-
-//  render(sortedProducts, currentPagination);
-//  renderIndicators(currentPagination, indicators.recentProductsCount, indicators.p50, indicators.p90, indicators.p95, indicators.lastReleaseDate);
-//};
-
 const getRecentProducts = (products, days = 14) => {
   const recentThreshold = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   return products.filter(({ released }) => new Date(released) > recentThreshold);
@@ -376,78 +249,42 @@ const main = async () => {
   renderIndicators(currentPagination, indicators.newProductsCount, indicators.p50, indicators.p90, indicators.p95, indicators.lastReleasedDate);
 };
 
-// Favorite button 
-//const handleFavoriteButtonClick = (event) => {
-//  if (event.target.matches('.favorite')) {
-//    const uuid = event.target.dataset.uuid;
-//    const favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-//    const isFavorite = favoriteProducts.includes(uuid);
-    
-//    if (isFavorite) {
-//      const updatedFavorites = favoriteProducts.filter(favUuid => favUuid !== uuid);
-//      localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
-//      event.target.textContent = '☆';
-//    } else {
-//      favoriteProducts.push(uuid);
-//      localStorage.setItem('favoriteProducts', JSON.stringify(favoriteProducts));
-//      event.target.textContent = '★';
-//    }
-//  }
-//};
-
-// Filter by favorite
-//const filterByFavorites = (products) => {
-//  const favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-//  return products.filter(product => favoriteProducts.includes(product.uuid));
-//};
-
-//const applyFiltersAndSort = () => {
-
-//  if (checkboxFavorites.checked) {
-//    filteredProducts = filterByFavorites(filteredProducts);
-//  }
-
-//};
-
-
-const toggleFavorite = (uuid) => {
-  const favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-  const isFavorite = favoriteProducts.includes(uuid);
-  
-  if (isFavorite) {
-    const updatedFavorites = favoriteProducts.filter(favUuid => favUuid !== uuid);
-    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
-    return false;
-  } else {
-    favoriteProducts.push(uuid);
-    localStorage.setItem('favoriteProducts', JSON.stringify(favoriteProducts));
-    return true;
-  }
-};
-
+/**
+  * Favorite button
+  */
 const handleFavoriteButtonClick = (event) => {
-  const target = event.target.closest('.favorite');
-  if (target) {
-    const uuid = target.dataset.uuid;
-    const isFavorite = toggleFavorite(uuid);
-    target.textContent = isFavorite ? '★' : '☆';
+  if (event.target.matches('.favorite')) {
+    const uuid = event.target.dataset.uuid;
+    const favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
+    const isFavorite = favoriteProducts.includes(uuid);
+    
+    if (isFavorite) {
+      const updatedFavorites = favoriteProducts.filter(favUuid => favUuid !== uuid);
+      localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
+      event.target.textContent = '☆';
+    } else {
+      favoriteProducts.push(uuid);
+      localStorage.setItem('favoriteProducts', JSON.stringify(favoriteProducts));
+      event.target.textContent = '★';
+    }
   }
 };
+ /**
+  * Filter by favorite
+  */
 
 const filterByFavorites = (products) => {
   const favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-  return products.filter(({ uuid }) => favoriteProducts.includes(uuid));
+  return products.filter(product => favoriteProducts.includes(product.uuid));
 };
 
 const applyFiltersAndSort = () => {
-  let filteredProducts = currentProducts;
+
   if (checkboxFavorites.checked) {
     filteredProducts = filterByFavorites(filteredProducts);
   }
-  // apply other filters and sorting here
-  return filteredProducts;
-};
 
+};
 
 /**
  * Declaration of all Listeners
@@ -484,23 +321,14 @@ selectBrand.addEventListener('change', async (event) => { // Ajouter la sélecti
   render(currentProducts, currentPagination);
 });
 
-
-
-
 /**
  * Select the recent products
  */
-checkboxRecent.addEventListener('change', () => { // Add the listener for the recent checkbox
-  //const products = await fetchProducts(currentPagination.currentPage, selectShow.value, selectBrand.value, event.target.checked);
-
-  //setCurrentProducts(products);
+checkboxRecent.addEventListener('change', () => { 
   render(currentProducts, currentPagination);
 });
 
-checkboxReasonablePrice.addEventListener('change', () => { // Add the listener for the recent checkbox
-  //const products = await fetchProducts(currentPagination.currentPage, selectShow.value, selectBrand.value, event.target.checked);
-
-  //setCurrentProducts(products);
+checkboxReasonablePrice.addEventListener('change', () => {
   render(currentProducts, currentPagination);
 });
 
@@ -510,51 +338,6 @@ selectSort.addEventListener('change', () => {
 
 sectionProducts.addEventListener('click', handleFavoriteButtonClick);
 checkboxFavorites.addEventListener('change', applyFiltersAndSort);
-
-
-//selectPrice.addEventListener('change', async (event) => {
-//    const products = await fetchProducts(currentPagination.currentPage, selectShow.value, selectBrand.value, event.target.value);
-  
-//    setCurrentProducts(products);
-//    render(currentProducts, currentPagination);
-//});
-
-
-
-//sortPrice.addEventListener('change', async (event) => {
-//  const products = await fetchProducts(currentPagination.currentPage, selectShow.value, selectBrand.value, event.target.value, sortPrice.value); // Mettre à jour la sélection de la marque
-
-//  setCurrentProducts(products);
-//  render(currentProducts, currentPagination);
-//});
-
-
-//const applyFilters = async (event) => {
-//  const brand = selectBrand.value;
-  //const recent = checkboxRecent.checked;
-  //const maxPrice = selectPrice.value;
-//  const sort = event.target.value; // Read the selected sorting order
-
-//  currentProducts = await fetchProducts(currentPagination.currentPage, selectShow.value, brand, sort);
-  
-//  render(currentProducts, currentPagination);
-//}
-
-//sortPrice.addEventListener('change', applyFilters);
-
-
-
-//const updateProducts = async (event) => {
-//  const brand = selectBrand.value;
-  //const recent = checkboxRecent.checked;
-  //const maxPrice = selectPrice.value;
-//  const sort = event.target.value; // Get the selected sorting option
-//  const products = await fetchProducts(currentPage, pageSize, brand, false, 50, sort);
-//  displayProducts(products);
-//  displayPagination(products.pagination);
-//};
-
-
 
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();

@@ -60,13 +60,13 @@ async function sortByPrice(db){
 
 (async () => {
   try {
-    const MONGODB_URI = 'mongodb+srv://el:BvLWCRxd3m7NMSAW@cluster0.rdalspo.mongodb.net/?retryWrites=true&w=majority';
+    const MONGODB_URI = 'mongodb+srv://khadijamokhtari:TulipesBlanches@cluster0.1h6jjsj.mongodb.net/?retryWrites=true&w=majority';
     const MONGODB_DB_NAME = 'clearfashion'; //creation db
     const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true}); //connect to mongodb
     const db = client.db(MONGODB_DB_NAME); //select the db
     
     // Insertion des données
-    //await insertData(db);
+    await insertData(db);
 
     // Find all products related to a given brands
     //await brand("Montlimart",db)
